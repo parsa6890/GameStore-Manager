@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}شروع سفارش | GameStore{% endblock %}
+
+{% block content %}
+<div class="max-w-lg mx-auto mt-12 fade-in">
+    <div class="text-center mb-8">
+        <h1 class="text-4xl font-bold gradient-text mb-2">به GameStore خوش آمدید</h1>
+        <p class="text-gray-400">برای شروع سفارش، اطلاعات خود را وارد کنید</p>
+    </div>
+
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-2xl p-8 backdrop-blur">
+        <form method="post" class="space-y-5">
+            {% csrf_token %}
+
+            {% for field in form %}
+                <div>
+                    <label class="block text-sm text-gray-300 mb-2">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <p class="text-red-400 text-xs mt-1">{{ field.errors.0 }}</p>
+                    {% endif %}
+                </div>
+            {% endfor %}
+
+            {% if form.non_field_errors %}
+                <div class="bg-red-900/40 border border-red-700 rounded-lg p-3 text-red-200 text-sm">
+                    {{ form.non_field_errors.0 }}
+                </div>
+            {% endif %}
+
+            <button type="submit"
+                    class="w-full bg-gradient-to-l from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold py-3 rounded-lg transition shadow-lg shadow-purple-900/50">
+                ادامه →
+            </button>
+        </form>
+    </div>
+
+    <p class="text-center text-xs text-gray-600 mt-4">
+        با ادامه، شما با شرایط استفاده موافقت می‌کنید.
+    </p>
+</div>
+{% endblock %}
