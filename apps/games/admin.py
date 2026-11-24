@@ -5,7 +5,7 @@ from .models import GameCategory, Genre, Game, GamePlatformVersion
 class GamePlatformVersionInline(admin.TabularInline):
     model = GamePlatformVersion
     extra = 1
-    fields = ("platform", "version_name", "size_gb", "is_active")
+    fields = ("platform", "console_type", "version_name", "size_gb", "is_active")
 
 
 @admin.register(GameCategory)
@@ -34,6 +34,6 @@ class GameAdmin(admin.ModelAdmin):
 
 @admin.register(GamePlatformVersion)
 class GamePlatformVersionAdmin(admin.ModelAdmin):
-    list_display = ("game", "platform", "version_name", "size_gb", "is_active")
-    list_filter = ("platform", "is_active")
+    list_display = ("game", "platform", "console_type", "version_name", "size_gb", "is_active")
+    list_filter = ("platform", "console_type", "is_active")
     search_fields = ("game__title_fa", "game__title_en")

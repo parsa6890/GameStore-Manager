@@ -1,3 +1,4 @@
+from apps.consoles.models import ConsoleType
 from django.core.management.base import BaseCommand
 from apps.games.models import (
     GameCategory, Genre, Game, GamePlatformVersion,
@@ -27,10 +28,11 @@ GAMES_DATA = [
         "is_kid_friendly": True, "is_family_friendly": True,
         "violence_level": ViolenceLevel.NONE,
         "recommended_age": 3,
-        "versions": [
-            (Platform.PS4, 45.5), (Platform.PS5, 52.0),
-            (Platform.XBOX_ONE, 45.5), (Platform.XBOX_SERIES_X, 52.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 45.5), (Platform.PS5, 52.0), (Platform.XBOX_ONE, 45.5), (Platform.XBOX_SERIES_X, 52.0)],
+            "account": [(Platform.PS4, 50.0), (Platform.PS5, 55.0)],
+            "normal": [(Platform.PS4, 45.5), (Platform.PS5, 52.0)],
+        },
     },
     {
         "title_fa": "اسپایدرمن ۲", "title_en": "Marvel's Spider-Man 2",
@@ -40,9 +42,11 @@ GAMES_DATA = [
         "is_kid_friendly": False, "is_family_friendly": False,
         "violence_level": ViolenceLevel.MEDIUM,
         "recommended_age": 13,
-        "versions": [
-            (Platform.PS5, 98.0), (Platform.PS5_SLIM, 98.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS5, 98.0), (Platform.PS5_SLIM, 98.0)],
+            "account": [(Platform.PS5, 105.0)],
+            "normal": [(Platform.PS5, 98.0)],
+        },
     },
     {
         "title_fa": "ماینکرفت", "title_en": "Minecraft",
@@ -52,10 +56,11 @@ GAMES_DATA = [
         "is_kid_friendly": True, "is_family_friendly": True,
         "violence_level": ViolenceLevel.LOW,
         "recommended_age": 7,
-        "versions": [
-            (Platform.PS4, 1.5), (Platform.PS5, 1.5),
-            (Platform.XBOX_ONE, 1.5), (Platform.XBOX_SERIES_X, 1.5),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 1.5), (Platform.PS5, 1.5), (Platform.XBOX_ONE, 1.5), (Platform.XBOX_SERIES_X, 1.5)],
+            "account": [(Platform.PS4, 1.5), (Platform.PS5, 1.5)],
+            "normal": [(Platform.PS4, 1.5), (Platform.PS5, 1.5)],
+        },
     },
     {
         "title_fa": "کال آو دیوتی: وارزون", "title_en": "Call of Duty: Warzone",
@@ -65,10 +70,11 @@ GAMES_DATA = [
         "is_kid_friendly": False, "is_family_friendly": False,
         "violence_level": ViolenceLevel.HIGH,
         "recommended_age": 16,
-        "versions": [
-            (Platform.PS4, 120.0), (Platform.PS5, 130.0),
-            (Platform.XBOX_ONE, 120.0), (Platform.XBOX_SERIES_X, 130.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 120.0), (Platform.PS5, 130.0), (Platform.XBOX_ONE, 120.0), (Platform.XBOX_SERIES_X, 130.0)],
+            "account": [(Platform.PS4, 125.0), (Platform.PS5, 135.0)],
+            "normal": [(Platform.PS4, 120.0), (Platform.PS5, 130.0)],
+        },
     },
     {
         "title_fa": "گاد آو وار: راگناروک", "title_en": "God of War Ragnarök",
@@ -78,9 +84,11 @@ GAMES_DATA = [
         "is_kid_friendly": False, "is_family_friendly": False,
         "violence_level": ViolenceLevel.HIGH,
         "recommended_age": 18,
-        "versions": [
-            (Platform.PS4, 84.0), (Platform.PS5, 84.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 84.0), (Platform.PS5, 84.0)],
+            "account": [(Platform.PS4, 90.0), (Platform.PS5, 90.0)],
+            "normal": [(Platform.PS4, 84.0), (Platform.PS5, 84.0)],
+        },
     },
     {
         "title_fa": "فورت‌نایت", "title_en": "Fortnite",
@@ -90,10 +98,11 @@ GAMES_DATA = [
         "is_kid_friendly": True, "is_family_friendly": True,
         "violence_level": ViolenceLevel.LOW,
         "recommended_age": 10,
-        "versions": [
-            (Platform.PS4, 30.0), (Platform.PS5, 35.0),
-            (Platform.XBOX_ONE, 30.0), (Platform.XBOX_SERIES_X, 35.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 30.0), (Platform.PS5, 35.0), (Platform.XBOX_ONE, 30.0), (Platform.XBOX_SERIES_X, 35.0)],
+            "account": [(Platform.PS4, 35.0), (Platform.PS5, 40.0)],
+            "normal": [(Platform.PS4, 30.0), (Platform.PS5, 35.0)],
+        },
     },
     {
         "title_fa": "ماریو کارت ۸", "title_en": "Mario Kart 8 Deluxe",
@@ -103,9 +112,11 @@ GAMES_DATA = [
         "is_kid_friendly": True, "is_family_friendly": True,
         "violence_level": ViolenceLevel.NONE,
         "recommended_age": 3,
-        "versions": [
-            (Platform.PS4, 7.0), (Platform.PS5, 7.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 7.0), (Platform.PS5, 7.0)],
+            "account": [(Platform.PS4, 7.0), (Platform.PS5, 7.0)],
+            "normal": [(Platform.PS4, 7.0), (Platform.PS5, 7.0)],
+        },
     },
     {
         "title_fa": "الدن رینگ", "title_en": "Elden Ring",
@@ -115,10 +126,11 @@ GAMES_DATA = [
         "is_kid_friendly": False, "is_family_friendly": False,
         "violence_level": ViolenceLevel.HIGH,
         "recommended_age": 18,
-        "versions": [
-            (Platform.PS4, 60.0), (Platform.PS5, 60.0),
-            (Platform.XBOX_ONE, 60.0), (Platform.XBOX_SERIES_X, 60.0),
-        ],
+        "versions": {
+            "copy": [(Platform.PS4, 60.0), (Platform.PS5, 60.0), (Platform.XBOX_ONE, 60.0), (Platform.XBOX_SERIES_X, 60.0)],
+            "account": [(Platform.PS4, 65.0), (Platform.PS5, 65.0)],
+            "normal": [(Platform.PS4, 60.0), (Platform.PS5, 60.0)],
+        },
     },
 ]
 
@@ -167,15 +179,20 @@ class Command(BaseCommand):
                 if gen:
                     game.genres.add(gen)
 
-            # Versions
-            for platform, size in versions:
-                _, v_created = GamePlatformVersion.objects.get_or_create(
-                    game=game, platform=platform, version_name="",
-                    defaults={"size_gb": size, "is_active": True},
-                )
-                if v_created:
-                    self.stdout.write(
-                        f"    ✓ Version: {game.title_en} on {platform} - {size}GB"
+            # Versions (per console_type)
+            for type_slug, version_list in versions.items():
+                console_type = ConsoleType.objects.get(slug=type_slug)
+                for platform, size in version_list:
+                    _, v_created = GamePlatformVersion.objects.get_or_create(
+                        game=game,
+                        platform=platform,
+                        console_type=console_type,
+                        version_name="",
+                        defaults={"size_gb": size, "is_active": True},
                     )
+                    if v_created:
+                        self.stdout.write(
+                            f"    ✓ Version: {game.title_en} - {console_type.name} - {platform} - {size}GB"
+                        )
 
         self.stdout.write(self.style.SUCCESS("\n✅ Game seed done!"))

@@ -22,14 +22,15 @@ class OrderStatusHistoryInline(admin.TabularInline):
 @admin.register(Order)
 class OrderAdmin(admin.ModelAdmin):
     list_display = (
-        "order_number", "customer", "console_model", "status",
-        "total_volume_snapshot", "created_at",
+        "order_number", "customer", "console_model", "console_type_snapshot",
+        "status", "total_volume_snapshot", "created_at",
     )
     list_filter = ("status", "created_at", "console_model__brand")
     search_fields = ("order_number", "customer__first_name", "customer__last_name", "customer__mobile")
     readonly_fields = (
-        "order_number", "nominal_capacity_snapshot", "usable_capacity_snapshot",
-        "total_volume_snapshot", "access_token_hash", "created_at", "updated_at",
+        "order_number", "console_type_snapshot", "nominal_capacity_snapshot",
+        "usable_capacity_snapshot", "total_volume_snapshot", "access_token_hash",
+        "created_at", "updated_at",
     )
     inlines = [OrderItemInline, OrderStatusHistoryInline]
     date_hierarchy = "created_at"

@@ -118,6 +118,12 @@ class Platform(models.TextChoices):
 class GamePlatformVersion(models.Model):
     game = models.ForeignKey(Game, on_delete=models.CASCADE, related_name="versions", verbose_name="بازی")
     platform = models.CharField(max_length=20, choices=Platform.choices, verbose_name="پلتفرم")
+    console_type = models.ForeignKey(
+        "consoles.ConsoleType",
+        on_delete=models.PROTECT,
+        related_name="game_versions",
+        verbose_name="نوع کنسول",
+    )
     version_name = models.CharField(max_length=100, blank=True, verbose_name="نام نسخه")
     size_gb = models.DecimalField(
         max_digits=8, decimal_places=2,
@@ -132,16 +138,16 @@ class GamePlatformVersion(models.Model):
     class Meta:
         verbose_name = "نسخه پلتفرمی بازی"
         verbose_name_plural = "نسخه‌های پلتفرمی بازی"
-        ordering = ["game", "platform"]
+        ordering = ["game", "platform", "console_type"]
         constraints = [
             models.UniqueConstraint(
-                fields=["game", "platform", "version_name"],
-                name="unique_game_platform_version",
+                fields=["game", "platform", "console_type", "version_name"],
+                name="unique_game_platform_type_version",
             ),
         ]
         indexes = [
-            models.Index(fields=["platform", "is_active"]),
+            models.Index(fields=["platform", "console_type", "is_active"]),
         ]
 
     def __str__(self):
-        return f"{self.game.title_en} - {self.get_platform_display()} - {self.size_gb}GB"
+        return f"{self.game.title_en} - {self.get_platform_display()} - {self.console_type} - {self.size_gb}GB"

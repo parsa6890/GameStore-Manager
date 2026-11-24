@@ -18,6 +18,24 @@ class ConsoleBrand(models.Model):
         return self.name
 
 
+class ConsoleType(models.Model):
+    """نوع کنسول: کپی‌خور / اکانتی / معمولی"""
+
+    name = models.CharField(max_length=50, unique=True, verbose_name="نام نوع")
+    slug = models.SlugField(max_length=60, unique=True, verbose_name="اسلاگ")
+    description = models.TextField(blank=True, verbose_name="توضیحات")
+    is_active = models.BooleanField(default=True, verbose_name="فعال")
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        verbose_name = "نوع کنسول"
+        verbose_name_plural = "انواع کنسول"
+        ordering = ["name"]
+
+    def __str__(self):
+        return self.name
+
+
 class ConsoleModel(models.Model):
     brand = models.ForeignKey(
         ConsoleBrand,
@@ -54,6 +72,12 @@ class ConsoleCapacity(models.Model):
         related_name="capacities",
         verbose_name="مدل کنسول",
     )
+    console_type = models.ForeignKey(
+        ConsoleType,
+        on_delete=models.PROTECT,
+        related_name="capacities",
+        verbose_name="نوع کنسول",
+    )
     nominal_capacity = models.DecimalField(
         max_digits=8,
         decimal_places=2,
@@ -73,11 +97,11 @@ class ConsoleCapacity(models.Model):
     class Meta:
         verbose_name = "ظرفیت کنسول"
         verbose_name_plural = "ظرفیت‌های کنسول"
-        ordering = ["console_model", "nominal_capacity"]
+        ordering = ["console_model", "console_type", "nominal_capacity"]
         constraints = [
             models.UniqueConstraint(
-                fields=["console_model", "nominal_capacity"],
-                name="unique_capacity_per_model",
+                fields=["console_model", "console_type", "nominal_capacity"],
+                name="unique_capacity_per_model_type",
             ),
             models.CheckConstraint(
                 condition=models.Q(usable_capacity__lte=models.F("nominal_capacity")),
@@ -86,4 +110,4 @@ class ConsoleCapacity(models.Model):
         ]
 
     def __str__(self):
-        return f"{self.console_model} - {self.nominal_capacity}GB (قابل استفاده: {self.usable_capacity}GB)"
+        return f"{self.console_model} - {self.console_type} - {self.nominal_capacity}GB"

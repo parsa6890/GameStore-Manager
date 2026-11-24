@@ -35,7 +35,8 @@ class Order(models.Model):
     )
     console_capacity = models.ForeignKey(ConsoleCapacity, on_delete=models.PROTECT, related_name="orders", verbose_name="ظرفیت کنسول")
 
-    # Snapshot اطلاعات ظرفیت (برای مصونیت از تغییرات بعدی)
+    # Snapshot اطلاعات ظرفیت و نوع (برای مصونیت از تغییرات بعدی)
+    console_type_snapshot = models.CharField(max_length=50, verbose_name="نوع کنسول (Snapshot)")
     nominal_capacity_snapshot = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="ظرفیت اسمی (Snapshot)")
     usable_capacity_snapshot = models.DecimalField(max_digits=8, decimal_places=2, verbose_name="ظرفیت قابل استفاده (Snapshot)")
     total_volume_snapshot = models.DecimalField(max_digits=10, decimal_places=2, default=Decimal("0"), verbose_name="مجموع حجم (Snapshot)")
