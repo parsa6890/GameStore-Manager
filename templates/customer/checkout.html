@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}بررسی نهایی سفارش | GameStore{% endblock %}
+
+{% block content %}
+<div class="max-w-4xl mx-auto fade-in">
+    <div class="text-center mb-8">
+        <h1 class="text-3xl font-bold gradient-text mb-2">بررسی نهایی سفارش</h1>
+        <p class="text-gray-400">اطلاعات زیر را بررسی کنید و سفارش را ثبت کنید</p>
+    </div>
+
+    <!-- Customer Info -->
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 mb-4">
+        <h2 class="font-bold text-lg mb-3 text-purple-300">👤 اطلاعات مشتری</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div><span class="text-gray-400">نام: </span><span class="font-bold">{{ customer.first_name }} {{ customer.last_name }}</span></div>
+            <div><span class="text-gray-400">موبایل: </span><span class="font-bold" dir="ltr">{{ customer.mobile }}</span></div>
+        </div>
+    </div>
+
+    <!-- Console Info -->
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 mb-4">
+        <h2 class="font-bold text-lg mb-3 text-purple-300">🎮 مشخصات کنسول</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div><span class="text-gray-400">مدل: </span><span class="font-bold">{{ capacity.console_model.name }}</span></div>
+            <div><span class="text-gray-400">نوع: </span><span class="font-bold text-cyan-400">{{ capacity.console_type.name }}</span></div>
+            <div><span class="text-gray-400">ظرفیت اسمی: </span><span class="font-bold">{{ capacity.nominal_capacity }} GB</span></div>
+            <div><span class="text-gray-400">ظرفیت قابل استفاده: </span><span class="font-bold">{{ capacity.usable_capacity }} GB</span></div>
+        </div>
+    </div>
+
+    <!-- Games -->
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 mb-4">
+        <h2 class="font-bold text-lg mb-3 text-purple-300">🕹️ بازی‌های انتخاب‌شده ({{ summary.count }})</h2>
+        <div class="space-y-2">
+            {% for item in summary.items %}
+                <div class="flex justify-between items-center bg-[#0F0F1E]/60 rounded-lg p-3 text-sm">
+                    <div>
+                        <div class="font-bold">{{ item.game_title }}</div>
+                        <div class="text-xs text-gray-400">{{ item.platform }} - {{ item.console_type }}</div>
+                    </div>
+                    <div class="font-bold text-cyan-400">{{ item.size_gb }} GB</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <!-- Summary -->
+    <div class="bg-[#1A1A2E]/80 border-2 border-purple-700/60 rounded-xl p-5 mb-4">
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 text-center">
+            <div>
+                <div class="text-sm text-gray-400">مجموع حجم</div>
+                <div class="text-2xl font-bold text-yellow-400">{{ summary.total }} GB</div>
+            </div>
+            <div>
+                <div class="text-sm text-gray-400">ظرفیت قابل استفاده</div>
+                <div class="text-2xl font-bold text-cyan-400">{{ summary.usable }} GB</div>
+            </div>
+            <div>
+                <div class="text-sm text-gray-400">فضای باقی‌مانده</div>
+                <div class="text-2xl font-bold text-green-400">{{ summary.remaining }} GB</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Actions -->
+    <div class="flex flex-col sm:flex-row gap-3">
+        <a href="{% url 'games:list' %}"
+           class="flex-1 text-center bg-[#0F0F1E] border border-purple-900/40 hover:border-purple-500 text-gray-300 font-bold py-3 rounded-lg transition">
+            ← ویرایش انتخاب‌ها
+        </a>
+        <form method="post" class="flex-1">
+            {% csrf_token %}
+            <button type="submit"
+                    class="w-full bg-gradient-to-l from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold py-3 rounded-lg transition shadow-lg shadow-purple-900/50">
+                ثبت نهایی سفارش ✓
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}

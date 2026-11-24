@@ -1,0 +1,46 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}مشتریان | پنل مدیریت{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <h1 class="text-2xl font-bold gradient-text">مشتریان</h1>
+    <span class="text-sm text-gray-400">{{ page_obj.paginator.count }} مشتری</span>
+</div>
+
+<form method="get" class="mb-6 bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+    <div class="flex gap-3">
+        <input type="text" name="q" value="{{ q }}" placeholder="جستجو (نام، موبایل)..."
+               class="flex-1 bg-[#0F0F1E] border border-purple-900/40 rounded-lg px-3 py-2 text-gray-100">
+        <button type="submit" class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm">جستجو</button>
+    </div>
+</form>
+
+<div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl overflow-hidden">
+    <table class="w-full text-sm">
+        <thead class="bg-[#0F0F1E]/60 text-gray-400">
+            <tr>
+                <th class="px-4 py-3 text-right">نام</th>
+                <th class="px-4 py-3 text-right">موبایل</th>
+                <th class="px-4 py-3 text-right">تعداد سفارش</th>
+                <th class="px-4 py-3 text-right">آخرین سفارش</th>
+                <th class="px-4 py-3 text-right">عملیات</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for c in customers %}
+                <tr class="border-t border-purple-900/20 hover:bg-[#0F0F1E]/40">
+                    <td class="px-4 py-3 font-bold">{{ c.full_name }}</td>
+                    <td class="px-4 py-3" dir="ltr">{{ c.mobile }}</td>
+                    <td class="px-4 py-3 text-cyan-400">{{ c.orders_count }}</td>
+                    <td class="px-4 py-3 text-gray-400">{{ c.last_order_date|date:"m/d H:i"|default:"—" }}</td>
+                    <td class="px-4 py-3">
+                        <a href="{% url 'dashboard:customer_detail' c.id %}" class="text-purple-400 hover:text-purple-300">مشاهده</a>
+                    </td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="text-center text-gray-500 py-8">مشتری یافت نشد</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

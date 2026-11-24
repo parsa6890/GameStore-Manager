@@ -1,0 +1,44 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}پنل مدیریت | GameStore{% endblock %}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
+</head>
+<body class="bg-[#0F0F1E] text-gray-100 font-[Vazirmatn] min-h-screen">
+    <!-- Header -->
+    <header class="border-b border-purple-900/40 bg-[#0F0F1E]/80 backdrop-blur sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <a href="{% url 'dashboard:dashboard' %}" class="text-xl font-bold gradient-text">
+                ⚙️ پنل مدیریت
+            </a>
+            <nav class="flex items-center gap-4 text-sm">
+                <a href="{% url 'dashboard:dashboard' %}" class="text-gray-300 hover:text-purple-300">داشبورد</a>
+                <a href="{% url 'dashboard:order_list' %}" class="text-gray-300 hover:text-purple-300">سفارش‌ها</a>
+                <a href="{% url 'dashboard:customer_list' %}" class="text-gray-300 hover:text-purple-300">مشتریان</a>
+                <a href="/admin/" class="text-gray-300 hover:text-purple-300">ادمین جنگو</a>
+                <a href="/" class="text-cyan-400 hover:text-cyan-300">سایت مشتری</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Messages -->
+    {% if messages %}
+        <div class="max-w-7xl mx-auto px-4 mt-4">
+            {% for message in messages %}
+                <div class="mb-2 p-3 rounded-lg {% if message.tags == 'error' %}bg-red-900/40 border border-red-700 text-red-200{% elif message.tags == 'success' %}bg-green-900/40 border border-green-700 text-green-200{% else %}bg-blue-900/40 border border-blue-700 text-blue-200{% endif %}">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    <main class="max-w-7xl mx-auto px-4 py-6">
+        {% block content %}{% endblock %}
+    </main>
+</body>
+</html>

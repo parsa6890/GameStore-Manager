@@ -19,6 +19,11 @@ def _get_customer(request):
         request.session.pop(SESSION_KEY, None)
         return None
 
+@require_http_methods(["GET"])
+def landing(request):
+    """صفحه خوش‌آمدگویی اولیه (بعد از اسکن QR)"""
+    return render(request, "customer/landing.html")
+
 
 @require_http_methods(["GET", "POST"])
 def start(request):

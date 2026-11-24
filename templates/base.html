@@ -18,6 +18,11 @@
                 GameStore
             </a>
             <nav class="flex items-center gap-4 text-sm">
+                {% if user.is_staff %}
+                    <a href="{% url 'dashboard:dashboard' %}" class="text-purple-400 hover:text-purple-300">⚙️ پنل مدیریت</a>
+                {% else %}
+                    <a href="{% url 'admin:login' %}?next=/dashboard/" class="text-gray-500 hover:text-gray-300 text-xs">ورود مدیر</a>
+                {% endif %}
                 {% if customer %}
                     <span class="text-gray-400">{{ customer.full_name }}</span>
                     <a href="{% url 'accounts:logout' %}" class="text-red-400 hover:text-red-300">خروج</a>

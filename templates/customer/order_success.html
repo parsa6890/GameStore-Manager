@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+{% block title %}سفارش ثبت شد | GameStore{% endblock %}
+
+{% block content %}
+<div class="max-w-2xl mx-auto mt-12 text-center fade-in">
+    <div class="text-7xl mb-6">✅</div>
+    <h1 class="text-3xl font-bold gradient-text mb-3">سفارش شما ثبت شد!</h1>
+    <p class="text-gray-400 mb-8">شماره سفارش خود را یادداشت کنید</p>
+
+    <div class="bg-[#1A1A2E]/80 border-2 border-purple-700/60 rounded-2xl p-8 mb-6">
+        <div class="text-sm text-gray-400 mb-2">شماره سفارش</div>
+        <div class="text-3xl font-bold text-cyan-400 mb-4" dir="ltr">{{ order.order_number }}</div>
+        <div class="text-sm text-gray-400 mb-1">وضعیت فعلی</div>
+        <div class="text-lg font-bold text-purple-300">{{ order.get_status_display }}</div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row gap-3 justify-center">
+        <a href="{% url 'orders:my_orders' %}"
+           class="bg-[#0F0F1E] border border-purple-900/40 hover:border-purple-500 text-gray-300 font-bold px-6 py-3 rounded-lg transition">
+            سفارش‌های من
+        </a>
+        <a href="{% url 'accounts:landing' %}"
+           class="bg-gradient-to-l from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold px-6 py-3 rounded-lg transition">
+            سفارش جدید
+        </a>
+    </div>
+</div>
+{% endblock %}

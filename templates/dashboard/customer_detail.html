@@ -1,0 +1,49 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}{{ customer.full_name }} | پنل مدیریت{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold gradient-text">{{ customer.full_name }}</h1>
+        <p class="text-sm text-gray-400 mt-1" dir="ltr">{{ customer.mobile }}</p>
+    </div>
+    <a href="{% url 'dashboard:customer_list' %}" class="text-sm text-purple-400 hover:text-purple-300">← بازگشت</a>
+</div>
+
+<div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 mb-6">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-4 text-sm">
+        <div><span class="text-gray-400">تاریخ عضویت: </span>{{ customer.created_at|date:"Y/m/d" }}</div>
+        <div><span class="text-gray-400">تعداد سفارش: </span>{{ orders|length }}</div>
+        <div><span class="text-gray-400">وضعیت: </span>{% if customer.is_active %}فعال{% else %}غیرفعال{% endif %}</div>
+        <div><span class="text-gray-400">احراز هویت: </span>{% if customer.is_verified %}✓{% else %}—{% endif %}</div>
+    </div>
+</div>
+
+<div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl overflow-hidden">
+    <h2 class="font-bold text-lg p-4 border-b border-purple-900/40">سفارش‌ها</h2>
+    <table class="w-full text-sm">
+        <thead class="bg-[#0F0F1E]/60 text-gray-400">
+            <tr>
+                <th class="px-4 py-3 text-right">شماره</th>
+                <th class="px-4 py-3 text-right">حجم</th>
+                <th class="px-4 py-3 text-right">وضعیت</th>
+                <th class="px-4 py-3 text-right">تاریخ</th>
+                <th class="px-4 py-3 text-right"></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in orders %}
+                <tr class="border-t border-purple-900/20 hover:bg-[#0F0F1E]/40">
+                    <td class="px-4 py-3 font-bold text-cyan-400" dir="ltr">{{ order.order_number }}</td>
+                    <td class="px-4 py-3">{{ order.total_volume_snapshot }} GB</td>
+                    <td class="px-4 py-3">{{ order.get_status_display }}</td>
+                    <td class="px-4 py-3 text-gray-400">{{ order.created_at|date:"m/d H:i" }}</td>
+                    <td class="px-4 py-3"><a href="{% url 'dashboard:order_detail' order.order_number %}" class="text-purple-400 hover:text-purple-300">جزئیات</a></td>
+                </tr>
+            {% empty %}
+                <tr><td colspan="5" class="text-center text-gray-500 py-8">سفارشی ثبت نشده</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

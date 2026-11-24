@@ -1,0 +1,100 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}سفارش {{ order.order_number }} | پنل مدیریت{% endblock %}
+
+{% block content %}
+<div class="flex justify-between items-center mb-6">
+    <div>
+        <h1 class="text-2xl font-bold gradient-text">سفارش {{ order.order_number }}</h1>
+        <p class="text-sm text-gray-400 mt-1">{{ order.created_at|date:"Y/m/d H:i" }}</p>
+    </div>
+    <div class="flex gap-3">
+        <a href="{% url 'dashboard:order_print' order.order_number %}" target="_blank"
+           class="bg-purple-600 hover:bg-purple-500 text-white px-4 py-2 rounded-lg text-sm">🖨️ چاپ</a>
+        <a href="{% url 'dashboard:order_list' %}" class="text-sm text-purple-400 hover:text-purple-300 self-center">← بازگشت</a>
+    </div>
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+    <div class="lg:col-span-2 space-y-4">
+        <!-- Customer -->
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5">
+            <h2 class="font-bold text-lg mb-3 text-purple-300">👤 مشتری</h2>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div><span class="text-gray-400">نام: </span>{{ order.customer.full_name }}</div>
+                <div><span class="text-gray-400">موبایل: </span><span dir="ltr">{{ order.customer.mobile }}</span></div>
+            </div>
+        </div>
+
+        <!-- Console -->
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5">
+            <h2 class="font-bold text-lg mb-3 text-purple-300">🎮 کنسول</h2>
+            <div class="grid grid-cols-2 gap-3 text-sm">
+                <div><span class="text-gray-400">مدل: </span>{{ order.console_model.name }}</div>
+                <div><span class="text-gray-400">نوع: </span>{{ order.console_type_snapshot }}</div>
+                <div><span class="text-gray-400">ظرفیت اسمی: </span>{{ order.nominal_capacity_snapshot }} GB</div>
+                <div><span class="text-gray-400">قابل استفاده: </span>{{ order.usable_capacity_snapshot }} GB</div>
+            </div>
+        </div>
+
+        <!-- Items -->
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5">
+            <div class="flex justify-between mb-3">
+                <h2 class="font-bold text-lg text-purple-300">🕹️ بازی‌ها ({{ items|length }})</h2>
+                <span class="text-cyan-400 font-bold">{{ order.total_volume_snapshot }} GB</span>
+            </div>
+            <div class="space-y-2">
+                {% for item in items %}
+                    <div class="flex justify-between items-center bg-[#0F0F1E]/60 rounded-lg p-3 text-sm">
+                        <div>
+                            <div class="font-bold">{{ item.game_title_snapshot }}</div>
+                            <div class="text-xs text-gray-400">{{ item.platform_snapshot }}</div>
+                        </div>
+                        <div class="text-cyan-400 font-bold">{{ item.size_gb_snapshot }} GB</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+
+        <!-- History -->
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5">
+            <h2 class="font-bold text-lg mb-3 text-purple-300">📜 تاریخچه</h2>
+            <div class="space-y-2 text-sm">
+                {% for h in history %}
+                    <div class="flex justify-between border-r-2 border-purple-700 pr-3 py-1">
+                        <div>
+                            <span class="text-gray-400">{{ h.old_status }} → </span>
+                            <span class="font-bold text-cyan-400">{{ h.new_status }}</span>
+                            {% if h.note %}<div class="text-xs text-gray-500">{{ h.note }}</div>{% endif %}
+                        </div>
+                        <div class="text-xs text-gray-500">{{ h.created_at|date:"m/d H:i" }}</div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Change -->
+    <div>
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 sticky top-20">
+            <h2 class="font-bold text-lg mb-3 text-purple-300">تغییر وضعیت</h2>
+            <div class="mb-3 text-sm">
+                <span class="text-gray-400">وضعیت فعلی: </span>
+                <span class="font-bold text-cyan-400">{{ order.get_status_display }}</span>
+            </div>
+            <form method="post" class="space-y-3">
+                {% csrf_token %}
+                <select name="status" class="w-full bg-[#0F0F1E] border border-purple-900/40 rounded-lg px-3 py-2 text-gray-100">
+                    {% for value, label in order_status_choices %}
+                        <option value="{{ value }}" {% if order.status == value %}selected{% endif %}>{{ label }}</option>
+                    {% endfor %}
+                </select>
+                <textarea name="note" rows="3" placeholder="توضیحات (اختیاری)..."
+                          class="w-full bg-[#0F0F1E] border border-purple-900/40 rounded-lg px-3 py-2 text-gray-100 text-sm"></textarea>
+                <button type="submit" class="w-full bg-gradient-to-l from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold py-2 rounded-lg text-sm">
+                    اعمال تغییر
+                </button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

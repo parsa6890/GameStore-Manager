@@ -1,0 +1,82 @@
+{% extends "dashboard/base_dashboard.html" %}
+{% block title %}داشبورد | پنل مدیریت{% endblock %}
+
+{% block content %}
+<h1 class="text-2xl font-bold gradient-text mb-6">داشبورد</h1>
+
+<!-- Stats Cards -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+        <div class="text-sm text-gray-400">کل مشتریان</div>
+        <div class="text-3xl font-bold text-purple-400 mt-2">{{ total_customers }}</div>
+    </div>
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+        <div class="text-sm text-gray-400">کل سفارش‌ها</div>
+        <div class="text-3xl font-bold text-cyan-400 mt-2">{{ total_orders }}</div>
+    </div>
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+        <div class="text-sm text-gray-400">سفارش‌های امروز</div>
+        <div class="text-3xl font-bold text-green-400 mt-2">{{ orders_today }}</div>
+    </div>
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+        <div class="text-sm text-gray-400">سفارش‌های این هفته</div>
+        <div class="text-3xl font-bold text-yellow-400 mt-2">{{ orders_week }}</div>
+    </div>
+</div>
+
+<!-- Status Breakdown -->
+<div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 mb-6">
+    {% for item in status_breakdown %}
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-3 text-center">
+            <div class="text-sm text-gray-400">{{ item.label }}</div>
+            <div class="text-xl font-bold text-purple-300 mt-1">{{ item.count }}</div>
+        </div>
+    {% endfor %}
+</div>
+
+<div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+    <!-- Recent Orders -->
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+        <div class="flex justify-between items-center mb-3">
+            <h2 class="font-bold text-lg">آخرین سفارش‌ها</h2>
+            <a href="{% url 'dashboard:order_list' %}" class="text-sm text-purple-400 hover:text-purple-300">همه ←</a>
+        </div>
+        {% if recent_orders %}
+            <div class="space-y-2">
+                {% for order in recent_orders %}
+                    <a href="{% url 'dashboard:order_detail' order.order_number %}"
+                       class="flex justify-between items-center bg-[#0F0F1E]/60 rounded-lg p-3 text-sm hover:border-purple-500 border border-transparent transition">
+                        <div>
+                            <div class="font-bold text-cyan-400" dir="ltr">{{ order.order_number }}</div>
+                            <div class="text-xs text-gray-400">{{ order.customer.full_name }}</div>
+                        </div>
+                        <div class="text-left">
+                            <div class="text-xs text-purple-300">{{ order.get_status_display }}</div>
+                            <div class="text-xs text-gray-500">{{ order.created_at|date:"m/d H:i" }}</div>
+                        </div>
+                    </a>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-6">سفارشی ثبت نشده</p>
+        {% endif %}
+    </div>
+
+    <!-- Top Games -->
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+        <h2 class="font-bold text-lg mb-3">محبوب‌ترین بازی‌ها</h2>
+        {% if top_games %}
+            <div class="space-y-2">
+                {% for g in top_games %}
+                    <div class="flex justify-between items-center bg-[#0F0F1E]/60 rounded-lg p-3 text-sm">
+                        <span class="font-bold">{{ g.game_title_snapshot }}</span>
+                        <span class="text-cyan-400">{{ g.count }} سفارش</span>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="text-gray-500 text-center py-6">داده‌ای موجود نیست</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

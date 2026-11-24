@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}خوش آمدید | GameStore{% endblock %}
+
+{% block content %}
+<div class="min-h-[80vh] flex flex-col items-center justify-center text-center fade-in">
+    <div class="mb-8">
+        <div class="text-7xl mb-6">🎮</div>
+        <h1 class="text-5xl font-bold gradient-text mb-4">GameStore</h1>
+        <p class="text-xl text-gray-300 mb-2">فروشگاه خدمات بازی کنسول</p>
+        <p class="text-gray-400">سریع‌ترین راه برای سفارش بازی‌های موردعلاقه‌ات</p>
+    </div>
+
+    <a href="{% url 'accounts:start' %}"
+       class="bg-gradient-to-l from-purple-600 to-cyan-500 hover:from-purple-500 hover:to-cyan-400 text-white font-bold text-lg px-12 py-4 rounded-2xl transition shadow-lg shadow-purple-900/50 glow-card">
+        شروع سفارش 🚀
+    </a>
+
+    <div class="mt-12 grid grid-cols-1 sm:grid-cols-3 gap-4 max-w-3xl">
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+            <div class="text-3xl mb-2">⚡</div>
+            <div class="font-bold text-purple-300">سریع و آسان</div>
+            <div class="text-sm text-gray-400 mt-1">در چند دقیقه سفارش بده</div>
+        </div>
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+            <div class="text-3xl mb-2">🎯</div>
+            <div class="font-bold text-purple-300">دقیق و مطمئن</div>
+            <div class="text-sm text-gray-400 mt-1">محاسبه لحظه‌ای ظرفیت</div>
+        </div>
+        <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-4">
+            <div class="text-3xl mb-2">🎁</div>
+            <div class="font-bold text-purple-300">انتخاب گسترده</div>
+            <div class="text-sm text-gray-400 mt-1">بازی‌های سازگار با کنسولت</div>
+        </div>
+    </div>
+</div>
+{% endblock %}

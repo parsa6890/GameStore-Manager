@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <title>چاپ سفارش {{ order.order_number }}</title>
+    <link href="https://cdn.jsdelivr.net/gh/rastikerdar/vazirmatn@v33.003/Vazirmatn-font-face.css" rel="stylesheet">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Vazirmatn, sans-serif; padding: 20px; font-size: 12px; color: #000; }
+        .header { text-align: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 2px solid #000; }
+        .header h1 { font-size: 20px; margin-bottom: 4px; }
+        .header .sub { font-size: 11px; color: #555; }
+        .row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+        .label { color: #555; }
+        .section { margin-bottom: 16px; }
+        .section-title { font-weight: bold; font-size: 13px; margin-bottom: 8px; border-bottom: 1px solid #999; padding-bottom: 4px; }
+        table { width: 100%; border-collapse: collapse; margin-top: 6px; }
+        th, td { border: 1px solid #999; padding: 6px; text-align: right; }
+        th { background: #eee; font-weight: bold; }
+        .total { font-weight: bold; font-size: 14px; text-align: left; margin-top: 8px; }
+        .footer { margin-top: 30px; text-align: center; font-size: 10px; color: #777; border-top: 1px solid #ccc; padding-top: 10px; }
+        .order-number { font-size: 18px; font-weight: bold; direction: ltr; text-align: center; }
+        @media print {
+            body { padding: 0; }
+            .no-print { display: none; }
+        }
+        .no-print { text-align: center; margin-bottom: 20px; }
+        .no-print button { padding: 8px 20px; background: #7C3AED; color: #fff; border: none; border-radius: 6px; cursor: pointer; font-family: inherit; }
+    </style>
+</head>
+<body>
+    <div class="no-print">
+        <button onclick="window.print()">🖨️ چاپ</button>
+    </div>
+
+    <div class="header">
+        <h1>GameStore</h1>
+        <div class="sub">فروشگاه خدمات بازی کنسول</div>
+        <div class="order-number">#{{ order.order_number }}</div>
+    </div>
+
+    <div class="section">
+        <div class="row"><span class="label">تاریخ ثبت:</span><span>{{ order.created_at|date:"Y/m/d H:i" }}</span></div>
+        <div class="row"><span class="label">وضعیت:</span><span>{{ order.get_status_display }}</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">مشخصات مشتری</div>
+        <div class="row"><span class="label">نام:</span><span>{{ order.customer.full_name }}</span></div>
+        <div class="row"><span class="label">موبایل:</span><span dir="ltr">{{ order.customer.mobile }}</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">مشخصات کنسول</div>
+        <div class="row"><span class="label">مدل:</span><span>{{ order.console_model.name }}</span></div>
+        <div class="row"><span class="label">نوع:</span><span>{{ order.console_type_snapshot }}</span></div>
+        <div class="row"><span class="label">ظرفیت اسمی:</span><span>{{ order.nominal_capacity_snapshot }} GB</span></div>
+        <div class="row"><span class="label">ظرفیت قابل استفاده:</span><span>{{ order.usable_capacity_snapshot }} GB</span></div>
+    </div>
+
+    <div class="section">
+        <div class="section-title">بازی‌ها ({{ items|length }})</div>
+        <table>
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>نام بازی</th>
+                    <th>پلتفرم</th>
+                    <th>حجم</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                    <tr>
+                        <td>{{ forloop.counter }}</td>
+                        <td>{{ item.game_title_snapshot }}</td>
+                        <td>{{ item.platform_snapshot }}</td>
+                        <td>{{ item.size_gb_snapshot }} GB</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="total">مجموع حجم: {{ order.total_volume_snapshot }} GB</div>
+    </div>
+
+    <div class="footer">
+        <p>با تشکر از خرید شما — GameStore</p>
+        <p>این رسید به عنوان مدرک سفارش معتبر است.</p>
+    </div>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}جزئیات سفارش {{ order.order_number }} | GameStore{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto fade-in">
+    <div class="flex items-center justify-between mb-6">
+        <h1 class="text-2xl font-bold gradient-text">سفارش {{ order.order_number }}</h1>
+        <span class="text-sm bg-purple-900/40 border border-purple-700 text-purple-300 px-3 py-1 rounded">
+            {{ order.get_status_display }}
+        </span>
+    </div>
+
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 mb-4">
+        <h2 class="font-bold text-lg mb-3 text-purple-300">📋 مشخصات</h2>
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm">
+            <div><span class="text-gray-400">مشتری: </span><span class="font-bold">{{ order.customer.full_name }}</span></div>
+            <div><span class="text-gray-400">موبایل: </span><span class="font-bold" dir="ltr">{{ order.customer.mobile }}</span></div>
+            <div><span class="text-gray-400">کنسول: </span><span class="font-bold">{{ order.console_model.name }} - {{ order.console_type_snapshot }}</span></div>
+            <div><span class="text-gray-400">ظرفیت: </span><span class="font-bold">{{ order.nominal_capacity_snapshot }} GB (قابل استفاده: {{ order.usable_capacity_snapshot }} GB)</span></div>
+            <div><span class="text-gray-400">تاریخ ثبت: </span><span class="font-bold">{{ order.created_at|date:"Y/m/d H:i" }}</span></div>
+            <div><span class="text-gray-400">مجموع حجم: </span><span class="font-bold text-cyan-400">{{ order.total_volume_snapshot }} GB</span></div>
+        </div>
+    </div>
+
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5 mb-4">
+        <h2 class="font-bold text-lg mb-3 text-purple-300">🕹️ بازی‌ها</h2>
+        <div class="space-y-2">
+            {% for item in items %}
+                <div class="flex justify-between items-center bg-[#0F0F1E]/60 rounded-lg p-3 text-sm">
+                    <div>
+                        <div class="font-bold">{{ item.game_title_snapshot }}</div>
+                        <div class="text-xs text-gray-400">{{ item.platform_snapshot }}</div>
+                    </div>
+                    <div class="font-bold text-cyan-400">{{ item.size_gb_snapshot }} GB</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+
+    <div class="bg-[#1A1A2E]/60 border border-purple-900/40 rounded-xl p-5">
+        <h2 class="font-bold text-lg mb-3 text-purple-300">📜 تاریخچه وضعیت</h2>
+        <div class="space-y-2 text-sm">
+            {% for h in history %}
+                <div class="flex justify-between items-center border-r-2 border-purple-700 pr-3 py-1">
+                    <div>
+                        <span class="text-gray-400">{{ h.old_status }} → </span>
+                        <span class="font-bold text-cyan-400">{{ h.new_status }}</span>
+                        {% if h.note %}<div class="text-xs text-gray-500 mt-1">{{ h.note }}</div>{% endif %}
+                    </div>
+                    <div class="text-xs text-gray-500">{{ h.created_at|date:"Y/m/d H:i" }}</div>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+</div>
+{% endblock %}
